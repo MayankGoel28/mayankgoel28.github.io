@@ -17,13 +17,28 @@ for md_file in files:
     html_path = os.path.join(md_dir, html_file)
     with open(md_path, 'r', encoding='utf-8') as f:
         md_text = f.read()
+    # Remove \show tag (not escaped)
+    md_text = re.sub(r'(?<!\\)\\show(?![a-zA-Z])', '', md_text)
+    # Convert Obsidian-style image links [[image.png]] or [[image.png|alt text]] to Markdown image syntax
+    def obsidian_img_to_md(match):
+        inner = match.group(1)
+        if '.png' in inner or '.jpg' in inner or '.jpeg' in inner or '.gif' in inner:
+            parts = inner.split('|')
+            src = parts[0].strip()
+            alt = parts[1].strip() if len(parts) > 1 else os.path.splitext(os.path.basename(src))[0]
+            return f'![{alt}]({src})'
+        return match.group(0)
+    md_text = re.sub(r'\[\[(.*?)\]\]', obsidian_img_to_md, md_text)
+    # Add title as h1 at the top
+    title = os.path.splitext(md_file)[0]
+    md_text = f'# {title}\n\n' + md_text.lstrip()
     html_body = markdown.markdown(md_text)
     # Simple HTML wrapper
     html_full = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{os.path.splitext(md_file)[0]}</title>
+    <title>{title}</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
