@@ -68,7 +68,7 @@
 
             <h4>Blogs</h4>
             <ul id="blogs-list">
-                <!-- Blog links will be inserted here by JS -->
+                <li><a href="md_files/Moral%20Graph%20Elicitation.md">Moral Graph Elicitation</a></li>
             </ul>
 
 
@@ -93,32 +93,3 @@
         <!-- <img src="glider.svg" alt="hacker emblem" id="glider"> -->
     </div>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap" rel="stylesheet">
-</body>
-<script>
-// Use the generated blogFiles array from blog_list.js to populate the blogs list
-function loadBlogsFromArray() {
-    const blogsList = document.getElementById('blogs-list');
-    if (typeof blogFiles === 'undefined' || !Array.isArray(blogFiles)) {
-        blogsList.innerHTML = '<li>Could not load blogs.</li>';
-        return;
-    }
-    if (blogFiles.length === 0) {
-        blogsList.innerHTML = '<li>No blogs found.</li>';
-        return;
-    }
-    blogFiles.forEach(file => {
-        const display = decodeURIComponent(file.replace(/\.md$/, '').replace(/_/g, ' '));
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = 'md_files/' + file;
-        a.textContent = display;
-        li.appendChild(a);
-        blogsList.appendChild(li);
-    });
-}
-if (document.getElementById('blogs-list')) loadBlogsFromArray();
-</script>
-<script src="blog_list.js"></script>
-</body>
-
-</html>
