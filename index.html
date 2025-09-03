@@ -66,6 +66,11 @@
                 <li><a href="https://github.com/MayankGoel28">Github</a></li>
             </ul>
 
+            <h4>Blogs</h4>
+            <ul id="blogs-list">
+                <!-- Blog links will be inserted here by JS -->
+            </ul>
+
 
             <h4>Cool stuff I like</h4>
             <ul>
@@ -88,6 +93,41 @@
         <!-- <img src="glider.svg" alt="hacker emblem" id="glider"> -->
     </div>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap" rel="stylesheet">
+</body>
+<script>
+// Inline function to fetch and list markdown files in md_files as blog links
+async function loadBlogs() {
+    const blogsList = document.getElementById('blogs-list');
+    try {
+        // Fetch the directory listing (works if directory listing is enabled)
+        const response = await fetch('md_files/');
+        const text = await response.text();
+        // Parse links from the directory listing
+        const regex = /href="([^"]+\.md)"/g;
+        let match;
+        const files = [];
+        while ((match = regex.exec(text)) !== null) {
+            files.push(match[1]);
+        }
+        files.forEach(file => {
+            const display = decodeURIComponent(file.replace(/\.md$/, '').replace(/_/g, ' '));
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = 'md_files/' + file;
+            a.textContent = display;
+            li.appendChild(a);
+            blogsList.appendChild(li);
+        });
+        if (files.length === 0) {
+            blogsList.innerHTML = '<li>No blogs found.</li>';
+        }
+    } catch (e) {
+        blogsList.innerHTML = '<li>Could not load blogs.</li>';
+    }
+}
+// Only run if blogs-list exists (i.e., on the links tab)
+if (document.getElementById('blogs-list')) loadBlogs();
+</script>
 </body>
 
 </html>
