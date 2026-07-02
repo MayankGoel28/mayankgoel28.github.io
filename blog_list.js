@@ -1,1 +1,0 @@
-const blogFiles = ["Moral Graph Elicitation.md"];
